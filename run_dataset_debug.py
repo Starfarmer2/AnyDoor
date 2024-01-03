@@ -19,20 +19,20 @@ from omegaconf import OmegaConf
 
 # Datasets
 DConf = OmegaConf.load('./configs/datasets.yaml')
-dataset1 = YoutubeVOSDataset(**DConf.Train.YoutubeVOS)  
-dataset2 = SaliencyDataset(**DConf.Train.Saliency) 
-dataset3 = VIPSegDataset(**DConf.Train.VIPSeg) 
-dataset4 = YoutubeVISDataset(**DConf.Train.YoutubeVIS) 
-dataset5 = MVImageNetDataset(**DConf.Train.MVImageNet)
-dataset6 = SAMDataset(**DConf.Train.SAM)
-dataset7 = UVODataset(**DConf.Train.UVO.train)
+# dataset1 = YoutubeVOSDataset(**DConf.Train.YoutubeVOS)  
+# dataset2 = SaliencyDataset(**DConf.Train.Saliency) 
+# dataset3 = VIPSegDataset(**DConf.Train.VIPSeg) 
+# dataset4 = YoutubeVISDataset(**DConf.Train.YoutubeVIS) 
+# dataset5 = MVImageNetDataset(**DConf.Train.MVImageNet)
+# dataset6 = SAMDataset(**DConf.Train.SAM)
+# dataset7 = UVODataset(**DConf.Train.UVO.train)
 dataset8 = VitonHDDataset(**DConf.Train.VitonHD)
-dataset9 = UVOValDataset(**DConf.Train.UVO.val)
-dataset10 = MoseDataset(**DConf.Train.Mose)
-dataset11 = FashionTryonDataset(**DConf.Train.FashionTryon)
-dataset12 = LvisDataset(**DConf.Train.Lvis)
+# dataset9 = UVOValDataset(**DConf.Train.UVO.val)
+# dataset10 = MoseDataset(**DConf.Train.Mose)
+# dataset11 = FashionTryonDataset(**DConf.Train.FashionTryon)
+# dataset12 = LvisDataset(**DConf.Train.Lvis)
 
-dataset = dataset5
+dataset = dataset8
 
 
 def vis_sample(item):
@@ -44,6 +44,7 @@ def vis_sample(item):
 
     ref = ref[0].numpy()
     tar = tar[0].numpy()
+
     hint_image = hint[0, :,:,:-1].numpy()
     hint_mask = hint[0, :,:,-1].numpy()
     hint_mask = np.stack([hint_mask,hint_mask,hint_mask],-1)
@@ -52,9 +53,10 @@ def vis_sample(item):
     cv2.imwrite('sample_vis.jpg',vis[:,:,::-1])
 
 
-dataloader = DataLoader(dataset, num_workers=8, batch_size=4, shuffle=True)
+dataloader = DataLoader(dataset, num_workers=2, batch_size=4, shuffle=True)
 print('len dataloader: ', len(dataloader))
 for data in dataloader:  
+    print("1")
     vis_sample(data) 
 
 

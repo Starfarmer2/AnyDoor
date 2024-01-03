@@ -104,6 +104,7 @@ class BaseDataset(Dataset):
         assert mask_score(ref_mask) > 0.90
         assert self.check_mask_area(ref_mask) == True
         assert self.check_mask_area(tar_mask)  == True
+        print("asserted")
 
         # ========= Reference ===========
         '''
@@ -183,9 +184,9 @@ class BaseDataset(Dataset):
         collage_mask = cropped_target_image.copy() * 0.0
         collage_mask[y1:y2,x1:x2,:] = 1.0
 
-        if np.random.uniform(0, 1) < 0.7: 
-            cropped_tar_mask = perturb_mask(cropped_tar_mask)
-            collage_mask = np.stack([cropped_tar_mask,cropped_tar_mask,cropped_tar_mask],-1)
+        # if np.random.uniform(0, 1) < 0.7: 
+        #     cropped_tar_mask = perturb_mask(cropped_tar_mask)
+        #     collage_mask = np.stack([cropped_tar_mask,cropped_tar_mask,cropped_tar_mask],-1)
 
         H1, W1 = collage.shape[0], collage.shape[1]
 

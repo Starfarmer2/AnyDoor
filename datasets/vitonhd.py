@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import os
 from torch.utils.data import Dataset
-from PIL import Image
+from PIL import Image, ImageOps
 import cv2
 from .data_utils import * 
 from .base import BaseDataset
@@ -40,22 +40,43 @@ class VitonHDDataset(BaseDataset):
         tar_image_path = ref_image_path.replace('/cloth/', '/image/')
         ref_mask_path = ref_image_path.replace('/cloth/','/cloth-mask/')
         tar_mask_path = ref_image_path.replace('/cloth/', '/image-parse-v3/').replace('.jpg','.png')
+        # tar_mask_path = ref_image_path.replace('/cloth/', '/image-parse-v3/')
 
         # Read Image and Mask
         ref_image = cv2.imread(ref_image_path)
         ref_image = cv2.cvtColor(ref_image, cv2.COLOR_BGR2RGB)
 
+
         tar_image = cv2.imread(tar_image_path)
         tar_image = cv2.cvtColor(tar_image, cv2.COLOR_BGR2RGB)
 
-        ref_mask = (cv2.imread(ref_mask_path) > 128).astype(np.uint8)[:,:,0]
+        # ref_mask = (cv2.imread(ref_mask_path) > 128).astype(np.uint8)[:,:,0]
 
-        tar_mask = Image.open(tar_mask_path ).convert('P')
-        tar_mask= np.array(tar_mask)
-        tar_mask = tar_mask == 5
+        # tar_mask = Image.open(tar_mask_path ).convert('P')
+        # tar_mask= np.array(tar_mask)
+        # tar_mask = tar_mask == 5
+
+        ref_mask = (cv2.imread(ref_mask_path) > 128).astype(np.uint8)[:,:,0]
+        tar_mask = (cv2.imread(tar_mask_path) > 50).astype(np.uint8)[:,:,0]
+
+        # ref_image = img_to_square(ref_image)
+        # tar_image = img_to_square(tar_image)
+        # ref_mask = img_to_square(ref_mask)
+        # tar_mask = img_to_square(tar_mask)
+
+
+        
+
+        ref_mask_img = Image.fromarray(ref_mask*255)
+        tar_mask_img = Image.fromarray(tar_mask*255)
+
+        ref_mask_img.save('ref_mask_img.jpg')
+        tar_mask_img.save('tar_mask_img.jpg')
+
 
         item_with_collage = self.process_pairs(ref_image, ref_mask, tar_image, tar_mask, max_ratio = 1.0)
         sampled_time_steps = self.sample_timestep()
         item_with_collage['time_steps'] = sampled_time_steps
         return item_with_collage
+
 
